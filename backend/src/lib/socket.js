@@ -2,8 +2,10 @@ import { Server } from "socket.io";
 
 const userSocketMap = {};
 
+let io = null; // 👈 global reference
+
 export function initSocketServer(server) {
-  const io = new Server(server, {
+  io = new Server(server, {
     cors: {
       origin: ["http://localhost:5173"],
     },
@@ -22,11 +24,10 @@ export function initSocketServer(server) {
       io.emit("getOnlineUsers", Object.keys(userSocketMap));
     });
   });
-
-  // Export the io instance if needed
-  global.io = io;
 }
 
 export function getReceiverSocketId(userId) {
   return userSocketMap[userId];
 }
+
+export { io }; // ✅ export the reference
